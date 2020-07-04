@@ -86,17 +86,18 @@ function createOrderBook(existingBook, incomingOrder) {
         oldBook[i].quantity -= quantity
         // now move our old order to the back of the book
         oldBook.push(...oldBook.splice(oldBook.indexOf(oldBook[i]), 1))
-        // cleanse both lists of any values that have a quantity 0
+        // check if this depleted our quantity, if so delete our order
         if (orderToExecute.quantity === 0) {
         // if our quantity is 0, delete the object
           orderToExecute = {}
         }
       }
       if (oldBook[i].quantity === 0) {
-        // if this sale made our quantity 0, then delete this object from the array
+        // if this sale made our quantity in the book 0, then delete this object from the array
         oldBook.splice(oldBook.indexOf(oldBook[i]), 1)
 
         // now check if an order is no longer possible
+        // eslint-disable-next-line no-prototype-builtins
         if (!dealPossible(oldBook, orderToExecute) && orderToExecute.hasOwnProperty('type') === true) {
           // if not then push the order to the back of the book 
           oldBook.push(orderToExecute)
