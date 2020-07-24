@@ -1,11 +1,10 @@
 
-
 function reconcileOrder(existingBook, incomingOrder) {
   let key = 'a'
   let i = -1
 
   const buyEqualOrder = order => order.type === 'buy' &&
-    order.price >= incomingOrder.price
+    order.price === incomingOrder.price
 
   const sellOrder = order => order.type === 'sell' && order.quantity >= incomingOrder.quantity &&
     order.price <= incomingOrder.price
@@ -19,8 +18,7 @@ function reconcileOrder(existingBook, incomingOrder) {
     }
   }
   if (i >= 0 && incomingOrder.quantity <= existingBook[i].quantity) { key = 'b' }
-  //if (i >= 0 && incomingOrder.quantity < existingBook[i].quantity) { key = 'b' }
-
+  if (i >= 0 && incomingOrder.quantity > existingBook[i].quantity) { key = 'c' }
 
   switch (key) {
     // adds an order to the book when the book is empty and thus cannot fulfill the order
@@ -44,14 +42,18 @@ function reconcileOrder(existingBook, incomingOrder) {
     // partially fulfills an order, removes the matching order and adds the remainder of the order 
     // to the book when the book contains a matching order of a smaller quantity
     case 'c': incomingOrder.quantity = incomingOrder.quantity - existingBook[i].quantity
-      existingBook.push(incomingOrder)
+      existingBook[i].quantity = 0
       existingBook = existingBook.filter(orders => orders.quantity > 0)
+      if (existingBook.findIndex(buyEqualOrder) >= 0) {
+        existingBook = reconcileOrder(existingBook, incomingOrder)
+      }
+      else {
+        existingBook.push(incomingOrder)
+      }
 
       return existingBook
 
-    default:
-      break
   }
 }
-// console.log(reconcileOrder(existingBook, incomingOrder))
+//console.log(reconcileOrder(existingBook, incomingOrder))
 module.exports = reconcileOrder
