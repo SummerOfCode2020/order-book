@@ -1,13 +1,16 @@
 
 function reconcileOrder(existingBook, incomingOrder) {
+  // default switch case key
   let key = 'a'
+  // matching order index variable
   let i = -1
-
+  // callback function for findIndex method which sets conditions for matching orders in existing book
   const buyEqualOrder = order => order.type === 'buy' &&
-    order.price === incomingOrder.price
+    order.price >= incomingOrder.price
 
   const sellOrder = order => order.type === 'sell' && order.quantity >= incomingOrder.quantity &&
     order.price <= incomingOrder.price
+  // Finds matching order index in existing book
 
   if (existingBook.length) {
     if (incomingOrder.type === 'buy') {
@@ -17,21 +20,16 @@ function reconcileOrder(existingBook, incomingOrder) {
       i = existingBook.findIndex(buyEqualOrder)
     }
   }
+  // switches handling of orders in special scenarios
   if (i >= 0 && incomingOrder.quantity <= existingBook[i].quantity) { key = 'b' }
   if (i >= 0 && incomingOrder.quantity > existingBook[i].quantity) { key = 'c' }
 
   switch (key) {
-    // adds an order to the book when the book is empty and thus cannot fulfill the order
-    // adds an order to the book when the book has no orders of the corresponding type (i.e. a sell with 
-    // no buys)
-    // adds an order to the book when the book has a corresponding order type but it does not match'
+    // adds an order to the book when the book is empty, or no matching order
     case 'a': existingBook.push(incomingOrder)
 
       return existingBook
-    // fulfills an order and removes the matching order when the book contains a matching order of the 
-    // same quantity
-    // fulfills an order and reduces the matching order when the book contains a matching order of 
-    // a larger quantity
+    // fulfills an order and removes matching order with same quantity, or reduces when larger quantity
     case 'b': existingBook[i].quantity -= incomingOrder.quantity
       if (existingBook[i].quantity > 0) {
         existingBook.push(existingBook.splice((i), 1)[0])
@@ -39,8 +37,7 @@ function reconcileOrder(existingBook, incomingOrder) {
       existingBook = existingBook.filter(orders => orders.quantity > 0)
 
       return existingBook
-    // partially fulfills an order, removes the matching order and adds the remainder of the order 
-    // to the book when the book contains a matching order of a smaller quantity
+    // all the rest of the special cases (uses recursion to fullfill order with to existing orders)
     case 'c': incomingOrder.quantity = incomingOrder.quantity - existingBook[i].quantity
       existingBook[i].quantity = 0
       existingBook = existingBook.filter(orders => orders.quantity > 0)
@@ -52,8 +49,7 @@ function reconcileOrder(existingBook, incomingOrder) {
       }
 
       return existingBook
-
   }
 }
-//console.log(reconcileOrder(existingBook, incomingOrder))
+// console.log(reconcileOrder(existingBook, incomingOrder))
 module.exports = reconcileOrder
