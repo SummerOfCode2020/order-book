@@ -5,7 +5,7 @@
   "main": ".eslintrc.js",
   "scripts": {
     "lint": "./node_modules/.bin/eslint --format codeframe .",
-    "test": "./node_modules/.bin/mocha ./tests.js"
+    "test": "./node_modules/.bin/mocha ./tests/*.js"
   },
   "repository": {
     "type": "git",
