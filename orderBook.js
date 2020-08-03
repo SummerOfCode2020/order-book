@@ -9,6 +9,45 @@ function reconcileOrder (existingBook, incomingOrder) {
         return existingBook.concat({...incomingOrder})
     }
 
+    // to support @test "adds an order to the book when the book has orders of the corresponding type (i.e. a sell with no buys)"
+    // this means there can be orders to sell but there are no buyers so the order to sell gets put in the book for a later match when orders to buy come in
+    const matchingTrades = existingBook.filter( function (existingOrder) { 
+        return existingBook.type !== incomingOrder.type
+    } )
+
+    /**
+    
+        You Have Options!
+
+        Adding an item onto an array can be done at least 4 ways.
+
+        Option A)
+
+            The push() method is used to add one or multiple elements to the end of an array. It returns the new length of the array formed. An object can be inserted by passing the object as a parameter to this method. The object is hence added to the end of the array.
+
+        Option B) 
+
+            The splice method is used to both remove and add elements from a specific index. It takes 3 parameters, the starting index, the number of elements to delete and then the items to be added to the array. An object can only be added without deleting any other element by specifying the second parameter to 0.
+
+            The object to be inserted is passed to the method and the index where it is to be inserted is specified. This inserts the object at the specified index.
+
+        Option C)
+
+            The unshift() method is used to add one or multiple elements to the beginning of an array. It returns the length of the new array formed. An object can be inserted by passing the object as a parameter to this method. The object is hence added to the beginning of the array.
+
+
+        Option D)
+
+            The concat() method is used to add one or multiple elements to the end of an array. It returns the new array. An object can be inserted by passing the object as a parameter to this method. The object is hence added to the end of the array.
+
+
+
+     */
+
+
+    // debug to see what we have for matches
+    console.log( {matchingTrades} )
+
 }
 
 module.exports = {
