@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 const { expect } = require('chai')
-const reconcileOrder = require('./orderBook')
+const { reconcileOrder } = require('./orderBook')
 
 describe('Order Book', () => {
   describe('reconcileOrder', () => {
