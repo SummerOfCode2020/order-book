@@ -6,13 +6,20 @@ function reconcileOrder (existingBook, incomingOrder) {
     // to support @test "adds an order to the book when the book is empty and thus cannot fulfill the order"
     if (existingBook.length === 0) {
         // if the book is empty we can exit quickly here without needed to run further logic
-        return existingBook.concat({...incomingOrder})
+        const updatedBook = existingBook.concat({...incomingOrder})
+        console.log({updatedBook})
+        return updatedBook
     }
 
     // to support @test "adds an order to the book when the book has orders of the corresponding type (i.e. a sell with no buys)"
     // this means there can be orders to sell but there are no buyers so the order to sell gets put in the book for a later match when orders to buy come in
     const matchingTrades = existingBook.filter( function (existingOrder) { 
-        return existingBook.type !== incomingOrder.type
+        const correspondingType = existingOrder.type !== incomingOrder.type
+        const correspondingPrice = existingOrder.price === incomingOrder.price
+        const correspondingQuantity = existingOrder.quantity === incomingOrder.quantity
+
+        // we need the type match, the price match and the quantity to all match
+        return correspondingType && correspondingPrice && correspondingQuantity
     } )
 
     /**
@@ -40,9 +47,15 @@ function reconcileOrder (existingBook, incomingOrder) {
 
             The concat() method is used to add one or multiple elements to the end of an array. It returns the new array. An object can be inserted by passing the object as a parameter to this method. The object is hence added to the end of the array.
 
-
-
      */
+
+     // for @test to add on the order when there is not a match in the book:
+     // if there is not something to exchange, we just put the incoming order into the book
+    if (matchingTrades.length === 0) {
+        const updatedBook = existingBook.concat(incomingOrder)
+        console.log({updatedBook})
+        return updatedBook
+    }
 
 
     // debug to see what we have for matches
