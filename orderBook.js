@@ -55,6 +55,32 @@ function reconcileOrder (existingBook, incomingOrder) {
         const updatedBook = existingBook.concat(incomingOrder)
         console.log({updatedBook})
         return updatedBook
+    } else {
+        // if we have a match, we need to fulfill that incoming order
+        const firstMatch = matchingTrades[0]
+
+        // now create a new order book array that does not include this firstMatch
+        // we need to remove an item from an array
+        // we have options
+        // we can use splice as an option
+        // we can create a loop that adds to a new array
+        const updatedBook = []
+
+        for (const existingOrder of existingBook) {
+            const typeIsSame = existingOrder.type === firstMatch.type
+            const quantityIsSame = existingOrder.quantity === firstMatch.quantity
+            const priceIsSame = existingOrder.price === firstMatch.price
+            
+            if (typeIsSame && quantityIsSame && priceIsSame) {
+                // here we would do the fulfillment
+            } else {
+                updatedBook.push(existingOrder)  
+            }
+            
+        }
+
+        return updatedBook
+
     }
 
 
