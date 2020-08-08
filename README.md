@@ -9,7 +9,36 @@ Working in a branch called answer, implement your function to get your tests to 
 ## Requirements
 An order book tracks all buy and sell requests from traders for Bitcoin assets at various price levels. When a trader submits a trade it is either fulfilled immediately, if there is a matching order in the book, or it is added to the book to be fulfilled later.
 
+orderbook is an array of objects
+// orderbook = [{
+    type: '',
+    quantity: '',
+    price: '',
+},{
+    type: '',
+    quantity: '',
+    price: '',
+}
+]
+
 Assume starting with an empty order book, let's walkthrough several scenarios.
+// declare orderbook as an array
+const existingBook = []
+
+// check if existingBook is empty
+// if book is empty
+    // push order into existingBook
+
+// interate over objects in array (existing book)
+// check price
+  // if there is not an existing price 'if(!price)', add new order
+// check type of each object if they match the current object (if we have a buy and there are no sells in stack)
+  // if there is a buy for the sell
+    // check the quantity
+      // if the buy > sell; change quantity to the difference and keep the type as Buy
+      // if the buy < sell; change quantity to the difference and keep the type as Sell
+      // if buy === sell, remove the order from the list
+// if there is no sell to match the buy add in new object (order)
 
 **Buy 15 BTC at 5800:** The order book is empty so this order cannot be fulfilled immediately. This order is added to the book.
 
@@ -38,3 +67,4 @@ For example, assume the book contains an order to buy 15 BTC at 6000. When we re
 The inverse however would not be true. Given a book with a buy 15 BTC at 5900, when we receive a sell order for 15 BTC at 6000 we should not fulfill this order since it would result in the seller getting less (5900 vs 6000).
 
 There are two tests associated with this extra created that are currently being skipped. Remove the `.skip` on these tests so they run when beginning this work.
+
